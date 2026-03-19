@@ -219,12 +219,12 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <a
-                  href="#showcase"
+                <Link
+                  href="/stories"
                   className="px-8 py-4 rounded-2xl text-base font-semibold text-white gradient-brand shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:scale-[1.02] transition-all duration-250"
                 >
                   Explore Our Story
-                </a>
+                </Link>
                 <a
                   href="#contact"
                   className="px-8 py-4 rounded-2xl text-base font-semibold glass hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 border border-border"
@@ -436,50 +436,28 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </section>
- 
-
-          {/* Showcase cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full">
-            {cards.map((card, index) => (
+            <div className="glass rounded-2xl p-5 mt-6 border border-white/10">
+              <p className="text-sm text-muted-foreground text-center leading-relaxed">
+                We welcome new learners throughout the term. Reach out today and our team will
+                guide you with a warm, personal response.
+              </p>
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-xl sm:text-2xl font-bold mb-4">
+                Dear king, queens and princes, click this and see our marvelous archive of
+                achievement, so godly and outstanding.
+              </p>
               <Link
-                key={card.href}
-                href={card.href}
-                className="group reveal"
-                style={{ animationDelay: `${index * 100}ms` }}
+                href="/stories"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-semibold text-white gradient-brand shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:scale-[1.02] transition-all duration-250"
               >
-                <GlassCard
-                  hover={true}
-                  padded={false}
-                  className="overflow-hidden h-80 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-                >
-                  <div className="relative h-full">
-                    <Image
-                      src={card.image}
-                      alt={card.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                      <h3 className="text-xl font-bold mb-2 group-hover:text-emerald-300 transition-colors">
-                        {card.title}
-                      </h3>
-                      <p className="text-sm text-gray-200 leading-relaxed mb-4">
-                        {card.desc}
-                      </p>
-                      <span className="inline-flex items-center gap-2 text-emerald-400 font-medium text-sm group-hover:text-emerald-300 transition-colors">
-                        Explore Story
-                        <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </GlassCard>
+                Visit our archive of achievements
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </Link>
-            ))}
-          </div>
+            </div>
+          </section>
         </div>
       </main>
 
