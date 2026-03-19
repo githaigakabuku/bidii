@@ -62,15 +62,62 @@ const cards = [
   },
 ];
 
+const curriculumItems = [
+  {
+    title: "CBE Curriculum",
+    desc: "Competency-based learning that builds practical skills and confidence.",
+  },
+];
+
+const clubItems = [
+  { title: "Chess Club", desc: "Strategy, patience, and sharp thinking." },
+  { title: "Debate", desc: "Confidence, public speaking, and critical thinking." },
+  { title: "Red Cross", desc: "Service, first aid, and community care." },
+  { title: "Scout", desc: "Leadership, teamwork, and outdoor skills." },
+];
+
+const staffMembers = [
+  {
+    name: "Headteacher",
+    title: "Headteacher",
+    image: "/images/hd.jpeg",
+    desc: "A visionary leader praised for discipline, excellence, and a caring school culture.",
+    videoSrc:
+      "https://www.youtube.com/embed/HEADTEACHER_ID?autoplay=1&rel=0&modestbranding=1",
+  },
+  {
+    name: "Deputy",
+    title: "Deputy Headteacher",
+    image: "/images/food.jpeg",
+    desc: "Focused on learner success, mentorship, and day-to-day academic progress.",
+    videoSrc:
+      "https://www.youtube.com/embed/DEPUTY_ID?autoplay=1&rel=0&modestbranding=1",
+  },
+  {
+    name: "Supreme Staff",
+    title: "Supreme Staff",
+    image: "/images/dance.jpeg",
+    desc: "A dedicated team shaping character, talent, and community impact.",
+    videoSrc:
+      "https://www.youtube.com/embed/STAFF_ID?autoplay=1&rel=0&modestbranding=1",
+  },
+];
+
 export default function Home() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
-  const videoSrc =
+  const [activeVideoSrc, setActiveVideoSrc] = useState<string | null>(null);
+  const storyVideoSrc =
     "https://www.youtube.com/embed/VIDEO_ID?autoplay=1&rel=0&modestbranding=1";
-  const openVideo = useCallback(() => {
+  const openVideo = useCallback((src: string) => {
+    setActiveVideoSrc(src);
     setIsVideoOpen(true);
     if (typeof window !== "undefined") {
       window.sessionStorage.setItem("bidiiVideoAutoOpen", "1");
     }
+  }, []);
+  const closeVideo = useCallback(() => {
+    setIsVideoOpen(false);
+    setActiveVideoSrc(null);
   }, []);
 
   useEffect(() => {
@@ -98,13 +145,13 @@ export default function Home() {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsVideoOpen(false);
+        closeVideo();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isVideoOpen]);
+  }, [closeVideo, isVideoOpen]);
 
   useEffect(() => {
     if (isVideoOpen) return;
@@ -115,10 +162,10 @@ export default function Home() {
     }
 
     const delayMs = 30000;
-    let timerId = window.setTimeout(openVideo, delayMs);
+    let timerId = window.setTimeout(() => openVideo(storyVideoSrc), delayMs);
     const resetTimer = () => {
       window.clearTimeout(timerId);
-      timerId = window.setTimeout(openVideo, delayMs);
+      timerId = window.setTimeout(() => openVideo(storyVideoSrc), delayMs);
     };
 
     const activityEvents = ["scroll", "mousemove", "keydown", "touchstart"];
@@ -132,7 +179,7 @@ export default function Home() {
         window.removeEventListener(eventName, resetTimer);
       });
     };
-  }, [isVideoOpen, openVideo]);
+  }, [isVideoOpen, openVideo, storyVideoSrc]);
 
   return (
     <div className="min-h-screen w-full font-sans text-zinc-900">
@@ -211,7 +258,7 @@ export default function Home() {
                   <h3 className="text-2xl sm:text-3xl font-bold text-white">Our Story</h3>
                   <button
                     type="button"
-                    onClick={openVideo}
+                    onClick={() => openVideo(storyVideoSrc)}
                     className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/90 text-slate-900 font-semibold shadow-lg hover:scale-[1.03] transition-transform"
                   >
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
@@ -259,6 +306,138 @@ export default function Home() {
             </p>
           </section>
 
+          {/* Curriculum & Clubs */}
+          <section className="w-full max-w-6xl mb-20 reveal">
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] items-start">
+              <div className="text-left">
+                <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground mb-3">
+                  Learning Path
+                </p>
+                <h3 className="text-3xl sm:text-4xl font-bold mb-4">
+                  Curriculum & Clubs
+                </h3>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  A strong academic foundation plus vibrant clubs that build confidence,
+                  leadership, and creativity.
+                </p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {curriculumItems.map((item) => (
+                  <GlassCard key={item.title} hover={true} className="p-5">
+                    <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground mb-2">
+                      Curriculum
+                    </p>
+                    <h4 className="text-lg font-semibold mb-2">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </GlassCard>
+                ))}
+                {clubItems.map((item) => (
+                  <GlassCard key={item.title} hover={true} className="p-5">
+                    <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground mb-2">
+                      Club
+                    </p>
+                    <h4 className="text-lg font-semibold mb-2">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </GlassCard>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Staff spotlight */}
+          <section className="w-full max-w-6xl mb-20 reveal">
+            <div className="text-center mb-10">
+              <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground mb-3">
+                Staff Spotlight
+              </p>
+              <h3 className="text-3xl sm:text-4xl font-bold mb-3">
+                Leaders Who Shape Our Culture
+              </h3>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Meet the team guiding our learners with excellence, faith, and discipline.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {staffMembers.map((staff) => (
+                <GlassCard key={staff.name} hover={true} padded={false} className="overflow-hidden">
+                  <div className="relative h-56">
+                    <Image
+                      src={staff.image}
+                      alt={staff.name}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <p className="text-sm uppercase tracking-[0.28em] text-white/70">
+                        {staff.title}
+                      </p>
+                      <h4 className="text-xl font-semibold">{staff.name}</h4>
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      {staff.desc}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => openVideo(staff.videoSrc)}
+                      className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold"
+                    >
+                      Watch Message
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </GlassCard>
+              ))}
+            </div>
+          </section>
+
+          {/* Admissions CTA */}
+          <section className="w-full max-w-6xl mb-20 reveal">
+            <div className="glass rounded-3xl p-8 md:p-10 border border-white/10 shadow-xl">
+              <div className="grid gap-8 md:grid-cols-[1.2fr_0.8fr] items-center">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground mb-3">
+                    Admissions
+                  </p>
+                  <h3 className="text-3xl sm:text-4xl font-bold mb-4">
+                    Ready to Join Bidii Primary?
+                  </h3>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    Admissions are open for the new term. Share your details and we will guide
+                    you through the next steps.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-4 md:items-end">
+                  <button
+                    type="button"
+                    className="px-8 py-4 rounded-2xl text-base font-semibold text-white gradient-brand shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 hover:scale-[1.02] transition-all duration-250"
+                  >
+                    Start Admission
+                  </button>
+                  <p className="text-sm text-muted-foreground">
+                    We will contact you with the full application details.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+ 
 
           {/* Showcase cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full">
@@ -307,7 +486,7 @@ export default function Home() {
       {isVideoOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
-          onClick={() => setIsVideoOpen(false)}
+          onClick={closeVideo}
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
           <div
@@ -316,7 +495,7 @@ export default function Home() {
           >
             <button
               type="button"
-              onClick={() => setIsVideoOpen(false)}
+              onClick={closeVideo}
               className="absolute -top-4 -right-4 z-10 h-10 w-10 rounded-full bg-white text-slate-900 shadow-lg hover:scale-105 transition-transform"
               aria-label="Close video"
             >
@@ -326,7 +505,7 @@ export default function Home() {
               <div className="aspect-video w-full">
                 <iframe
                   className="h-full w-full"
-                  src={videoSrc}
+                  src={activeVideoSrc ?? storyVideoSrc}
                   title="Bidii Primary video"
                   allow="autoplay; encrypted-media; picture-in-picture"
                   allowFullScreen
@@ -334,7 +513,7 @@ export default function Home() {
               </div>
             </div>
             <p className="mt-3 text-xs text-white/60 text-center">
-              Replace VIDEO_ID in the URL with your YouTube video ID.
+              Replace VIDEO_ID values with your YouTube video IDs.
             </p>
           </div>
         </div>
