@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GlassCard } from "@/components/GlassCard";
-import { BookOpen, Bell, BarChart3, Users } from "lucide-react";
 
 const cards = [
   {
@@ -64,6 +63,16 @@ const cards = [
 ];
 
 export default function Home() {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const videoSrc =
+    "https://www.youtube.com/embed/VIDEO_ID?autoplay=1&rel=0&modestbranding=1";
+  const openVideo = useCallback(() => {
+    setIsVideoOpen(true);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("bidiiVideoAutoOpen", "1");
+    }
+  }, []);
+
   useEffect(() => {
     const elements = document.querySelectorAll(".reveal");
     if (!elements.length) return;
@@ -84,6 +93,47 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!isVideoOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsVideoOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isVideoOpen]);
+
+  useEffect(() => {
+    if (isVideoOpen) return;
+    if (typeof window === "undefined") return;
+
+    if (window.sessionStorage.getItem("bidiiVideoAutoOpen") === "1") {
+      return;
+    }
+
+    const delayMs = 30000;
+    let timerId = window.setTimeout(openVideo, delayMs);
+    const resetTimer = () => {
+      window.clearTimeout(timerId);
+      timerId = window.setTimeout(openVideo, delayMs);
+    };
+
+    const activityEvents = ["scroll", "mousemove", "keydown", "touchstart"];
+    activityEvents.forEach((eventName) => {
+      window.addEventListener(eventName, resetTimer);
+    });
+
+    return () => {
+      window.clearTimeout(timerId);
+      activityEvents.forEach((eventName) => {
+        window.removeEventListener(eventName, resetTimer);
+      });
+    };
+  }, [isVideoOpen, openVideo]);
+
   return (
     <div className="min-h-screen w-full font-sans text-zinc-900">
       {/* Hero Section */}
@@ -99,9 +149,8 @@ export default function Home() {
             {/* ── Left: Copy ── */}
             <div className="text-center lg:text-left">
               {/* Tagline */}
-              <p className="text-xs font-bold tracking-[0.25em] uppercase text-muted-foreground mb-4 flex items-center gap-2 justify-center lg:justify-start">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Bidii Primary School
+              <p className="font-bold uppercase text-muted-foreground text-center lg:text-left mb-6 leading-tight text-2xl sm:text-3xl lg:text-7xl tracking-[0.18em] sm:tracking-[0.22em] lg:tracking-[0.25em] lg:whitespace-nowrap">
+                Bidii Comprehensive School
               </p>
 
               {/* Main heading */}
@@ -152,89 +201,31 @@ export default function Home() {
               </div>
             </div>
 
-            {/* ── Right: dashboard mockup ── */}
-            <div className="relative hidden lg:block">
-              {/* Main card */}
-              <GlassCard
-                hover={false}
-                padded={false}
-                className="rounded-3xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/40"
-              >
-                {/* Browser chrome */}
-                <div className="flex items-center gap-2 px-5 py-3.5 bg-black/[0.03] dark:bg-white/[0.03] border-b border-border">
-                  <span className="w-3 h-3 rounded-full bg-red-400" />
-                  <span className="w-3 h-3 rounded-full bg-yellow-400" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-400" />
-                  <div className="ml-4 flex-1 bg-black/[0.05] dark:bg-white/[0.05] rounded-lg px-4 py-1 text-xs text-muted-foreground text-center">
-                    bidii-primary.school
-                  </div>
-                </div>
-
-                {/* Dashboard body */}
-                <div className="p-5 space-y-4 bg-background/60">
-                  {/* Stat row */}
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { label: "Students", value: "500+", color: "text-foreground" },
-                      { label: "Teachers", value: "20+", color: "text-emerald-600 dark:text-emerald-400" },
-                      { label: "Classes", value: "8", color: "text-violet-600 dark:text-violet-400" },
-                    ].map((s) => (
-                      <div key={s.label} className="glass rounded-xl p-3">
-                        <p className="text-xs text-muted-foreground">{s.label}</p>
-                        <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Recent uploads */}
-                  <div className="glass rounded-xl p-4">
-                    <p className="text-sm font-semibold mb-3">School Highlights</p>
-                    <div className="space-y-2">
-                      {[
-                        { icon: BookOpen, color: "bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-300", title: "Academic Excellence", sub: "Top KCPE Results" },
-                        { icon: BarChart3, color: "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300", title: "Discipline & Faith", sub: "Godly Values" },
-                        { icon: Users, color: "bg-sky-100 dark:bg-sky-900/40 text-sky-600 dark:text-sky-300", title: "Community Impact", sub: "Local Leaders" },
-                      ].map((item) => (
-                        <div key={item.title} className="flex items-center gap-3 p-2 rounded-lg bg-black/[0.02] dark:bg-white/[0.02]">
-                          <div className={`w-8 h-8 rounded-lg ${item.color} flex items-center justify-center flex-shrink-0`}>
-                            <item.icon className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">{item.title}</p>
-                            <p className="text-xs text-muted-foreground">{item.sub}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </GlassCard>
-
-              {/* Floating notification */}
-              <div className="absolute -top-6 -right-8 glass rounded-2xl p-4 shadow-xl animate-float">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center flex-shrink-0">
-                    <Bell className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold">New Achievement</p>
-                    <p className="text-xs text-muted-foreground">KCPE Top Performer!</p>
-                  </div>
+            {/* ── Right: story video preview ── */}
+            <div className="relative w-full max-w-xl mx-auto lg:mx-0">
+              <div className="relative rounded-3xl overflow-hidden glass border border-white/10 shadow-2xl">
+                <div className="aspect-video bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-emerald-300/20" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center px-6">
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/70">Watch</p>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white">Our Story</h3>
+                  <button
+                    type="button"
+                    onClick={openVideo}
+                    className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/90 text-slate-900 font-semibold shadow-lg hover:scale-[1.03] transition-transform"
+                  >
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
+                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+                        <path d="M8 5v14l11-7-11-7z" />
+                      </svg>
+                    </span>
+                    Play Video
+                  </button>
                 </div>
               </div>
-
-              {/* Floating stat */}
-              <div className="absolute -bottom-6 -left-8 glass rounded-2xl p-4 shadow-xl animate-float" style={{ animationDelay: "2s" }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center flex-shrink-0">
-                    <BarChart3 className="w-4 h-4 text-violet-600 dark:text-violet-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold">100% Pass Rate</p>
-                    <p className="text-xs text-muted-foreground">National Exams</p>
-                  </div>
-                </div>
-              </div>
+              <p className="mt-4 text-sm text-muted-foreground text-center lg:text-left">
+                A quick look at Bidii Primary highlights, values, and student life.
+              </p>
             </div>
           </div>
         </div>
@@ -244,7 +235,7 @@ export default function Home() {
       <main className="">
         <div className="relative z-10 flex flex-col items-center w-full">
           <section className="central-story text-center mb-12 reveal">
-            <h1 className="page-title text-5xl md:text-7xl font-bold tracking-tighter mb-4">
+            <h1 className="page-title text-5xl md:text-2xl font-bold tracking-tighter mb-4">
              Bidii Primary School
             </h1>
             <div className="max-w-3xl mx-auto text-lg text-sky-900 leading-relaxed">
@@ -267,6 +258,7 @@ export default function Home() {
               From our proud uniform to presidential visits, explore the moments that define us.
             </p>
           </section>
+
 
           {/* Showcase cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full">
@@ -311,6 +303,42 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {isVideoOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+          onClick={() => setIsVideoOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-5xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setIsVideoOpen(false)}
+              className="absolute -top-4 -right-4 z-10 h-10 w-10 rounded-full bg-white text-slate-900 shadow-lg hover:scale-105 transition-transform"
+              aria-label="Close video"
+            >
+              <span className="block text-xl leading-none">x</span>
+            </button>
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl">
+              <div className="aspect-video w-full">
+                <iframe
+                  className="h-full w-full"
+                  src={videoSrc}
+                  title="Bidii Primary video"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-white/60 text-center">
+              Replace VIDEO_ID in the URL with your YouTube video ID.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
