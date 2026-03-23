@@ -103,6 +103,36 @@ const staffMembers = [
 	},
 ];
 
+const bestShowcaseLeaders = [
+	{
+		name: "President",
+		title: "Honored Guest",
+		image: "/images/ruto.jpeg",
+		quote:
+			"Patience, persistence and perspiration make an unbeatable combination for success.",
+		author: "Napoleon Hill",
+		note:
+			"A historic visit that affirmed Bidii's reputation for discipline and excellence.",
+	},
+	{
+		name: "Esther Passaris",
+		title: "Women Rep, Nairobi",
+		image: "/images/hd.jpeg",
+		quote: "Start with what is right rather than what is acceptable.",
+		author: "Franz Kafka",
+		note: "Celebrated the leadership and growth of our learners and staff.",
+	},
+	{
+		name: "Moses Wetang'ula",
+		title: "Member of Parliament",
+		image: "/images/food.jpeg",
+		quote:
+			"You have power over your mind - not outside events. Realize this, and you will find strength.",
+		author: "Marcus Aurelius",
+		note: "Encouraged resilience, focus, and continued success for Bidii learners.",
+	},
+];
+
 export default function Home() {
 	const [isVideoOpen, setIsVideoOpen] = useState(false);
 	const [activeVideoSrc, setActiveVideoSrc] = useState<string | null>(null);
@@ -201,7 +231,7 @@ export default function Home() {
 							</p>
 
 							{/* Main heading */}
-							<h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.08] tracking-tight mb-4">
+							<h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.08] tracking-tight mb-3">
 								<span className="text-foreground">Empowering</span>
 								<br />
 								<span className="gradient-text">Young Minds</span>
@@ -211,7 +241,7 @@ export default function Home() {
 								<span className="gradient-text">Excellence</span>
 							</h1>
 
-							<p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-lg mx-auto lg:mx-0 mb-10">
+							<p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-lg mx-auto lg:mx-0 mb-6">
 								Located in the heart of our community, Bidii Primary is known for
 								top academic results, strong discipline, and a caring, godly
 								culture. Explore each chapter to learn why visitors and leaders
@@ -234,7 +264,7 @@ export default function Home() {
 							</div>
 
 							{/* Stats */}
-							<div className="mt-12 pt-8 border-t border-border flex items-center justify-center lg:justify-start gap-10">
+							<div className="mt-8 pt-8 border-t border-border flex items-center justify-center lg:justify-start gap-10">
 								{[
 									{ n: "500+", l: "Students" },
 									{ n: "20+", l: "Teachers" },
@@ -323,8 +353,8 @@ export default function Home() {
 						</p>
 					</section>
 
-					<section className="w-full max-w-6xl mb-20 reveal">
-						<div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] items-center">
+					<section className="w-full px-2 sm:px-4 lg:px-6 mb-20 reveal">
+						<div className="mx-auto grid max-w-7xl gap-4 lg:gap-6 lg:grid-cols-[0.95fr_1.05fr] items-start">
 							<GlassCard className="overflow-hidden" padded={false}>
 								<div className="relative h-80 sm:h-[420px]">
 									<Image
@@ -335,7 +365,7 @@ export default function Home() {
 									/>
 								</div>
 							</GlassCard>
-							<div className="text-left">
+							<div className="text-left lg:pr-2">
 								<p className="text-xs uppercase tracking-[0.35em] text-muted-foreground mb-3">
 									Headteacher Highlight
 								</p>
@@ -555,6 +585,58 @@ export default function Home() {
 							</Link>
 						</div>
 					</section>
+
+					<section className="w-full px-2 sm:px-4 lg:px-6 mb-20 reveal">
+						<div className="mx-auto max-w-7xl">
+							<div className="text-center mb-10">
+								<p className="text-xs uppercase tracking-[0.35em] text-muted-foreground mb-3">
+									Best Showcase
+								</p>
+								<h3 className="text-3xl sm:text-4xl font-bold mb-3">
+									Leaders Who Inspire Bidii
+								</h3>
+								<p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+									A tribute to the distinguished leaders who have visited Bidii and affirmed our
+									commitment to discipline, excellence, and growth.
+								</p>
+							</div>
+							<div className="grid gap-10">
+								{bestShowcaseLeaders.map((leader) => (
+									<div
+										key={leader.name}
+										className="grid gap-4 lg:gap-6 lg:grid-cols-[0.95fr_1.05fr] items-start"
+									>
+										<GlassCard className="overflow-hidden" padded={false}>
+											<div className="relative h-72 sm:h-[380px]">
+												<Image
+													src={leader.image}
+													alt={leader.name}
+													fill
+													className="object-cover"
+												/>
+											</div>
+										</GlassCard>
+										<div className="text-left lg:pr-2">
+											<p className="text-xs uppercase tracking-[0.35em] text-muted-foreground mb-3">
+												{leader.title}
+											</p>
+											<h4 className="text-3xl sm:text-4xl font-bold mb-4">{leader.name}</h4>
+											<p className="text-lg font-semibold text-foreground mb-4">
+												"{leader.quote}"
+											</p>
+											<p className="text-sm uppercase tracking-[0.3em] text-muted-foreground mb-4">
+												{leader.author}
+											</p>
+											<p className="text-lg text-muted-foreground leading-relaxed mb-6">
+												{leader.note}
+											</p>
+											<div className="h-px w-24 bg-emerald-500/60" />
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+					</section>
 				</div>
 			</main>
 
@@ -588,7 +670,7 @@ export default function Home() {
 							</div>
 						</div>
 						<p className="mt-3 text-xs text-white/60 text-center">
-							Replace VIDEO_ID values with your YouTube video IDs.
+						these is the best video you will ever see in your life, so watch it and be blessed, and share it to your friends and family, so that they can also be blessed.
 						</p>
 					</div>
 				</div>
